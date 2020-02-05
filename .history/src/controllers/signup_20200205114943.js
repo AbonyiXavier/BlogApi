@@ -49,7 +49,7 @@ function signup(req, res) {
                   .header("auth-token", token)
                   .status(201)
                   .json({
-                    status: "success",
+                    status: "error",
                     message: "account created Successfully",
                     token
                     // user
