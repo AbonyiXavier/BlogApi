@@ -1,0 +1,24 @@
+{
+  "name": "blogapi",
+  "version": "1.0.0",
+  "description": "A blog Api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbonyiXavier/BlogApi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AbonyiXavier/BlogApi/issues"
+  },
+  "homepage": "https://github.com/AbonyiXavier/BlogApi#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  }
+}
