@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
+import dbConnection from "../db/db";
 
 const Auth = (req, res, next) => {
   const token = req.header("auth-token");
-  console.log(token);
+
   if (!token) {
     // return res.status(401).send("Access Denied");
     return res.status(401).json({
@@ -13,10 +14,9 @@ const Auth = (req, res, next) => {
   if (token) {
     try {
       jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
-        console.log("my name", decoded);
         req.user = decoded;
-        next();
       });
+      next();
       // console.log(req.user);
     } catch (error) {
       return res.status(400).send({
@@ -25,5 +25,25 @@ const Auth = (req, res, next) => {
       });
     }
   }
+};
+
+export const userRestriction = async (req, res, next) => {
+  let articleId = req.params.id;
+  const article = "SELECT userId FROM articles WHERE id = ?";
+  let result = await dbConnection.query(article, articleId);
+  if (result.length === 0) {
+    return res.status(404).json({
+      status: "error",
+      error: "Article not found"
+    });
+  }
+
+  if (result[0].userId !== req.user.id) {
+    return res.status(403).json({
+      status: "error",
+      error: "Access to modify not allowed"
+    });
+  }
+  next();
 };
 export default Auth;
