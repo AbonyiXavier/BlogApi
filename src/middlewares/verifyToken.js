@@ -27,23 +27,23 @@ const Auth = (req, res, next) => {
   }
 };
 
-export const userRestriction = async (req, res, next) => {
-  let articleId = req.params.id;
-  const article = "SELECT userId FROM articles WHERE id = ?";
-  let result = await dbConnection.query(article, articleId);
-  if (result.length === 0) {
-    return res.status(404).json({
-      status: "error",
-      error: "Article not found"
-    });
-  }
+// export const userRestriction = async (req, res, next) => {
+//   let articleId = req.params.id;
+//   const article = "SELECT userId FROM articles WHERE id = ?";
+//   let result = await dbConnection.query(article, articleId);
+//   if (result.length === 0) {
+//     return res.status(404).json({
+//       status: "error",
+//       error: "Article not found"
+//     });
+//   }
 
-  if (result[0].userId !== req.user.id) {
-    return res.status(403).json({
-      status: "error",
-      error: "Access to modify not allowed"
-    });
-  }
-  next();
-};
+//   if (result[0].userId !== req.user.id) {
+//     return res.status(403).json({
+//       status: "error",
+//       error: "Access to modify not allowed"
+//     });
+//   }
+//   next();
+// };
 export default Auth;

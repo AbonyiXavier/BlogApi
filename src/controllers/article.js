@@ -1,6 +1,7 @@
 import articleValidation from "../Models/article";
 import dbConnection from "../db/db";
 
+const resultHandler = result => {};
 export const create = async (req, res) => {
   try {
     const article = { userId: req.user.id, ...req.body };
@@ -45,8 +46,16 @@ export const update = async (req, res) => {
     });
   }
   try {
-    const query = "UPDATE articles SET ? WHERE id = ?";
-    await dbConnection.query(query, [article, articleId]);
+    const query = `UPDATE articles SET ? WHERE id = ? AND userId = ${req.user.id}`;
+    const result = await dbConnection.query(query, [article, articleId]);
+    if (result.changedRows === 0) {
+      return res.status(400).json({
+        status: "success",
+        data: {
+          message: "Restricted access or article with this id not found"
+        }
+      });
+    }
     return res.status(200).json({
       status: "success",
       data: {
@@ -58,7 +67,7 @@ export const update = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       status: "error",
-      error: `Caanot update article with title ${article.title}`
+      error: `Cannot update article with title --${article.title}`
     });
   }
 };
@@ -66,8 +75,16 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   try {
     const articleId = req.params.id;
-    const query = "DELETE FROM articles WHERE id = ? ";
-    await dbConnection.query(query, articleId);
+    const query = `DELETE FROM articles WHERE id = ? AND userId = ${req.user.id}`;
+    const result = await dbConnection.query(query, articleId);
+    if (result.changedRows === 0) {
+      return res.status(400).json({
+        status: "success",
+        data: {
+          message: "Restricted access or article with this id not found"
+        }
+      });
+    }
     return res.status(200).json({
       status: "success",
       data: {
